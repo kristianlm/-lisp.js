@@ -229,20 +229,25 @@ function µtest(name, expected, x) {
              ['array', ['quote', 'fn'],
               ['array', ['get', ['get', 'x', 1], 0]], // arg name
               ['append',
-              ['array', ['quote', 'let']],
+               ['array', ['quote', 'let']],
                ['array', ['slice', ['get', 'x', 1], 2]],
                'body...']],
-             ['get', ['get', 'x', 1], 1], // arg value
-            ],
+             ['get', ['get', 'x', 1], 1]], // arg value
             ['slice', 'x', 3]],
            // no more #bindings, so expand [let [] a b c] into just [do a b c]:
-           ['append', ['quote', 'do'], 'body...']]],
+           ['array',
+            ['append',
+             ['array', ['quote', 'fn']],
+             /**/['array', ['array']],
+             'body...']]]],
          /*bindings:*/['get', ['get', 'x', 1], ['quote', `length`]],
          /*body:*/['slice', 'x', 2]
         ]]]);
 
 
 µtest('let macro 0',  12, ['let', [], 12]);
+µtest('let macro 0 scope',  12, ['let', [], ['define', 'nested', 12], 'nested']);
+//µtest('let macro 0 scope',  12, 'nested'); // <-- should fail now
 µtest('let macro 1',  13, ['let', ['x', 12], ['+', 1, 'x']]);
 µtest('let macro 2', 120, ['let', ['x', 12, 'y', 10], ['*', 'y', 'x']]);
 
