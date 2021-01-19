@@ -1,4 +1,4 @@
-# µlisp.js
+# jsonlisp.js
 
   [LISP]:(https://en.wikipedia.org/wiki/Lisp_(programming_language))
 
@@ -85,7 +85,7 @@ example.
 # Running
 
 ```bash
-$ node µlisp.js
+$ node jsonlisp.js
 ```
 
 This runs a few tests and stuff. There should ideally be a REPL here,
