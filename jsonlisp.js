@@ -281,6 +281,15 @@ test('fahrenheit', 50, ['fahrenheit', 10]);
 // Btw, Clojure calls this the 'threading' macro:
 // http://clojure.github.io/clojure/clojure.core-api.html#clojure.core/-%3E
 
+// note that our macro system is very, very ugly. a real macro system would
+// allow you to pattern-match. this is the Scheme equivalent:
+//
+// (define-syntax ->
+//   (syntax-rules ()
+//     ((-> x) x)
+//     ((-> x (proc args ...) rest ...)
+//      (-> (proc x args ...) rest ...))))
+
 jsonlisp.eval(['define-syntax', '->',
                ['fn', ['x', 'env', 'menv'],
                 ['print', ['quote', 'debugging ->'], 'x'],
