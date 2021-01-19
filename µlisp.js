@@ -18,9 +18,10 @@
 //    `-----`-- but what about these guys?
 //
 // in programming languages that let you express code as
-// data-structures, these must have a data-type too. often called "symbol".
-// Some versions of JS/EcmaScript introduced them, but I'm not sure how useful
-// they are when you can't express your code as data-structure.
+// data-structures, these must have a data-type too. often called
+// "symbol". Some versions of JS/EcmaScript introduced them (new
+// Symbol('log')), but I'm not sure how useful they are when you can't
+// express your code as data-structure.
 
 let envTop = {
     '+':           (...args)=>args.reduce((a,b)=>a+b),
@@ -41,10 +42,10 @@ let envTop = {
 };
 
 let menvTop = {
-    // TODO: implement 'let' here
+    // define-syntax will put things here
 };
 
-// shallow expand of x.
+// shallow expand of x: see if x should be replaced by its macro output.
 function expand1(x, env, menv) {
     env = env || envTop;
     menv = menv || menvTop;
@@ -66,7 +67,9 @@ function expand(x, env, menv) {
     return x;
 }
 
-// this is the core interpreter. it's highly recursive.
+// this is the core interpreter. it's extremely slow, very
+// recursive, and it's missing critical parts (like apply). but
+// this is just for show.
 function µeval(x, env, menv) {
     env = env || envTop;
     menv = menv || menvTop;
@@ -89,7 +92,7 @@ function µeval(x, env, menv) {
             }
             return µeval(xs[xs.length-1], env, menv); // return last expression only
         }
-        case 'fn' : {
+        case 'fn' : { // aka lambda
             let bindings = x[1];
             let xs = x.slice(2);
             return function (...args) {
@@ -147,9 +150,9 @@ function µtest(name, expected, x) {
 
 µtest('simple addition', 123, ['+', 100, 23]);
 
-µtest('conditionals', 1, ['if', 100,   1, 2]);
-µtest('conditionals', 1, ['if', 0,     1, 2]); // no falsy, only false is false here
-µtest('conditionals', 2, ['if', false, 1, 2]); // for now at least.
+µtest('if', 1, ['if', 100,   1, 2]);
+µtest('if', 1, ['if', 0,     1, 2]); // no falsy, only false is false here
+µtest('if', 2, ['if', false, 1, 2]); // for now at least.
 
 µtest('conditional evaluation (only 1 printout)', undefined,
       ['if', true,
@@ -215,7 +218,6 @@ function µtest(name, expected, x) {
 
 // this is very, very slow.
 µtest('fib', 10946, ['fib', 20]);
-
 
 // macro that turns [let [x 0] [+ x 1]] => [[fn [x] [+ x 1] 0] for example.
 µeval(['define-syntax', 'let',
@@ -307,3 +309,4 @@ function µtest(name, expected, x) {
          ['+', 32]]]]);
 
 µtest('fahrenheit', 50, ['fahrenheit', 10]);
+
